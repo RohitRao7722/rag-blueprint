@@ -1,0 +1,13 @@
+# API keys
+.env
+
+# Downloaded corpora (arXiv papers keep their own licences; not redistributed)
+**/data/
+
+# Run outputs (contain the corpus text)
+**/out/
+
+# Python
+__pycache__/
+*.pyc
+.venv/

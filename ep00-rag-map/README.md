@@ -16,11 +16,24 @@ About 150 lines of plain Python. No framework, so each step is visible:
 
 ## Run it
 
+With pip (Python 3.12):
+
 ```bash
 pip install -r requirements.txt
 python run.py                      # default question
 python run.py "your own question"
 ```
+
+Or with Docker, nothing else to install (image ~670 MB; the embedding model and tokenizer are baked in, the paper downloads at run time):
+
+```bash
+docker build -t rag-blueprint-ep00 .
+docker run --rm -v "$PWD/out:/app/out" rag-blueprint-ep00                        # run.py
+docker run --rm -v "$PWD/out:/app/out" rag-blueprint-ep00 compare_overlap.py
+docker run --rm -v "$PWD/out:/app/out" --env-file .env rag-blueprint-ep00        # with the LLM step
+```
+
+`-v` puts the outputs in your own `out/` folder. The key is passed at run time with `--env-file` and is never part of the image. On Windows PowerShell use `"${PWD}/out:/app/out"`.
 
 The paper is downloaded from arXiv on the first run into `data/` (not committed: arXiv papers keep their own licence). Each step writes to `out/`:
 
@@ -64,7 +77,7 @@ All five scores sit within 0.043; #1 and #2 are 0.010 apart. A third chunk that 
 
 Overlap comparison (`compare_overlap.py`): with no overlap, 59 chunks and the answer chunks ranked 4 and 14; with 40-word overlap, 66 chunks and ranks 2, 3 and 17. Changing the overlap moves every chunk boundary, so this is one question, not a rule.
 
-Generation (`gpt-6-luna`, with the 5 chunks): *"RAG uses a dense vector index of Wikipedia as its non-parametric memory, accessed by a pre-trained neural retriever (DPR). [2][3]"* — the run shown on the slides. A later run of the same script gave *"…accessed through a pre-trained neural retriever. [2][3]"*: same claim and citations, slightly different wording. LLM output varies between runs; the retrieval does not.
+Generation (`gpt-6-luna`, with the 5 chunks): *"RAG uses a dense vector index of Wikipedia as its non-parametric memory, accessed by a pre-trained neural retriever (DPR). [2][3]"* — the run shown on the slides. Later runs of the same script gave *"…accessed through a pre-trained neural retriever. [2][3]"* and *"…accessed with a pre-trained neural retriever. [2]"*: the same claim each time, but the wording and the cited chunks vary. LLM output varies between runs; the retrieval does not.
 
 Without context (`no_context.py`): *"RAG uses an external knowledge corpus—typically documents or passages stored in a searchable index—as its non-parametric memory."* A re-run gave *"RAG uses an external collection of documents, typically stored in a vector database or index, as its non-parametric memory."* Both generic; neither names Wikipedia or DPR. The specifics came from the retrieved chunks. This paper is famous and likely in the model's training data, so grounding matters most for documents the model has never seen.
 

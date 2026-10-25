@@ -47,7 +47,17 @@ The paper is downloaded from arXiv on the first run into `data/` (not committed:
 6_answer.json          the LLM's answer (only if a key is set)
 ```
 
-The generation step needs an OpenAI key. Copy `.env.example` to `.env` and paste your key; without a key the script stops after writing the prompt. Note: values in `.env` **override** the shell environment, so the key in the file is always the one used.
+The generation step needs an API key. Copy `.env.example` to `.env` and paste your key; without a key the script stops after writing the prompt. Note: values in `.env` **override** the shell environment, so the key in the file is always the one used.
+
+Three providers are supported, chosen with `LLM_PROVIDER`:
+
+| `LLM_PROVIDER` | Key variable | Default model | Notes |
+|---|---|---|---|
+| `openai` (default) | `OPENAI_API_KEY` | `gpt-6-luna` | What the slides used (Responses API) |
+| `groq` | `GROQ_API_KEY` | `openai/gpt-oss-20b` | Has a free plan with rate limits |
+| `google` | `GEMINI_API_KEY` | `gemini-3.8-flash` | Google AI Studio; has a free tier. Google states free-tier content is used to improve its products |
+
+Groq and Google use the OpenAI client through their OpenAI-compatible endpoints (Chat Completions). Override the model with `LLM_MODEL`. Answers from other models will differ from the slides; retrieval doesn't depend on the provider.
 
 Two more scripts reproduce the comparisons on the slides:
 
@@ -79,7 +89,7 @@ Overlap comparison (`compare_overlap.py`): with no overlap, 59 chunks and the an
 
 Generation (`gpt-6-luna`, with the 5 chunks): *"RAG uses a dense vector index of Wikipedia as its non-parametric memory, accessed by a pre-trained neural retriever (DPR). [2][3]"* — the run shown on the slides. Later runs of the same script gave *"…accessed through a pre-trained neural retriever. [2][3]"* and *"…accessed with a pre-trained neural retriever. [2]"*: the same claim each time, but the wording and the cited chunks vary. LLM output varies between runs; the retrieval does not.
 
-Without context (`no_context.py`): *"RAG uses an external knowledge corpus—typically documents or passages stored in a searchable index—as its non-parametric memory."* A re-run gave *"RAG uses an external collection of documents, typically stored in a vector database or index, as its non-parametric memory."* Both generic; neither names Wikipedia or DPR. The specifics came from the retrieved chunks. This paper is famous and likely in the model's training data, so grounding matters most for documents the model has never seen.
+Without context (`no_context.py`): *"RAG uses an external knowledge corpus—typically documents or passages stored in a searchable index—as its non-parametric memory."* A re-run gave *"RAG uses an external collection of documents, typically stored in a vector database or index, as its non-parametric memory."* Both generic; neither names Wikipedia or DPR. The specifics came from the retrieved chunks. That holds for these `gpt-6-luna` runs only: with no context, Google's `gemini-3.8-flash` answered *"a dense vector index of an external knowledge corpus (such as Wikipedia passages)"*, so that model already knows this paper from training. This is exactly the caveat on slide 8; the no-context test only means something for documents the model hasn't seen. This paper is famous and likely in the model's training data, so grounding matters most for documents the model has never seen.
 
 ## Caveats
 

@@ -23,6 +23,15 @@ OVERLAP_WORDS = 40     # words shared between neighbouring chunks
 TOP_K = 5
 LLM_MODEL = "gpt-6-luna"   # override with the OPENAI_MODEL env var
 
+# Optional providers (set LLM_PROVIDER=groq or google). Both accept the OpenAI client
+# with a different base URL. The slides' numbers were produced with the default: OpenAI.
+PROVIDERS = {
+    "groq": {"base_url": "https://api.groq.com/openai/v1", "key": "GROQ_API_KEY",
+             "model": "openai/gpt-oss-20b"},
+    "google": {"base_url": "https://generativelanguage.googleapis.com/v1beta/openai/", "key": "GEMINI_API_KEY",
+               "model": "gemini-3.8-flash"},
+}
+
 HERE = Path(__file__).parent
 DATA = HERE / "data"
 OUT = HERE / "out"
@@ -106,13 +115,25 @@ def build_prompt(question, hits):
 
 # 8. Generate: the LLM answers from the prompt -------------------------------
 def generate(prompt):
-    if not os.environ.get("OPENAI_API_KEY"):
-        print("\nOPENAI_API_KEY not set: skipping generation (prompt saved in out/5_prompt.txt).")
-        return None
     from openai import OpenAI
-    model = os.environ.get("OPENAI_MODEL", LLM_MODEL)
-    resp = OpenAI().responses.create(model=model, input=prompt)
-    return {"model": model, "answer": resp.output_text}
+    provider = os.environ.get("LLM_PROVIDER", "openai").lower()
+    if provider == "openai":
+        if not os.environ.get("OPENAI_API_KEY"):
+            print("\nOPENAI_API_KEY not set: skipping generation (prompt saved in out/5_prompt.txt).")
+            return None
+        model = os.environ.get("OPENAI_MODEL", LLM_MODEL)
+        resp = OpenAI().responses.create(model=model, input=prompt)
+        return {"provider": provider, "model": model, "answer": resp.output_text}
+    if provider not in PROVIDERS:
+        sys.exit(f"LLM_PROVIDER must be openai, groq or google (got {provider!r}).")
+    p = PROVIDERS[provider]
+    if not os.environ.get(p["key"]):
+        print(f"\n{p['key']} not set: skipping generation (prompt saved in out/5_prompt.txt).")
+        return None
+    model = os.environ.get("LLM_MODEL", p["model"])
+    client = OpenAI(api_key=os.environ[p["key"]], base_url=p["base_url"])
+    resp = client.chat.completions.create(model=model, messages=[{"role": "user", "content": prompt}])
+    return {"provider": provider, "model": model, "answer": resp.choices[0].message.content}
 
 
 def count_tokens(text):

@@ -29,9 +29,9 @@ python scripts/gt_score.py           # -> scores.json
 | pdfplumber (default) | 0.37 | 58 |
 | pdfplumber (x_tolerance=1.5) | 0.37 | 58 |
 
-PyMuPDF ligatures-expanded = PyMuPDF default everywhere (no ligatures in these texts).
+PyMuPDF ligatures-expanded matches PyMuPDF default on 83 of 85 PDFs (it differs on the MuPDF-made Arabic and English files: 0.20 vs 0.00, 1.00 vs 0.95).
 
-## By script family (hit rate, Chrome PDF unless stated)
+## By script family (hit rate, plain Chrome PDF without links, unless stated; spaces ignored when searching)
 | Scripts | pypdf | PyMuPDF | pdfplumber | Notes |
 |---|---|---|---|---|
 | English, Russian, Chinese, Korean | 0.95–1.00 | 1.00 | 1.00 | fine in every generator |
@@ -41,7 +41,7 @@ PyMuPDF ligatures-expanded = PyMuPDF default everywhere (no ligatures in these t
 | Devanagari (Hindi, Marathi), Bengali, Gujarati, Punjabi, Kannada, Telugu, Malayalam, Tamil | 0.05–0.60 | 0.75–1.00 | 0.05–0.55 | pypdf/pdfplumber emit control codes for pre-base vowel signs (Hindi: 146×). PyMuPDF writes vowel signs twice ("बड़ाा", 44× in Hindi) yet snippets remain findable |
 
 ## The generator matters as much as the parser
-Same Hindi paragraph, same parser (PyMuPDF): Chrome 0.95 · Typst 1.00 · **Word 0.15 · MuPDF 0.10**. On Word- and MuPDF-made files **every parser returns the same wrong text** ("आधिकाररक" for "आधिकारिक"; "गणराăय"): the PDF's own glyph-to-character map is wrong. The same holds for the other eight Indian languages tested (letter agreement between parsers 0.87–1.00). Arabic behaves differently: on its Word file pdfplumber reverses the letters, so the parsers disagree. These files render perfectly; nothing but a human (or OCR) can tell.
+Same Hindi paragraph, same parser (PyMuPDF): Chrome 0.95 · Typst 1.00 · **Word 0.15 · MuPDF 0.10**. On the Word-made file **every parser returns the same wrong text** ("आधिकाररक" for "आधिकारिक"), and the same holds for all nine Indian languages' Word files (text similarity between parsers 0.97–1.00): the PDF's own glyph-to-character map is wrong. On the MuPDF-made files the parsers are wrong in different ways (pdfplumber emits (cid:NN) codes, PyMuPDF4LLM emits �, pypdf and PyMuPDF wrong letters such as "गणराăय"). Arabic behaves differently: on its Word file pdfplumber reverses the letters, so the parsers disagree. These files render perfectly; nothing but a human (or OCR) can tell.
 
 Typst files: pypdf and pdfplumber emit control codes between letters in every Indic script (hit 0.00); PyMuPDF reads them cleanly.
 

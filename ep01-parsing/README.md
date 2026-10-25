@@ -48,7 +48,7 @@ Found along the way:
 
 ## Ground-truth test: 17 languages, 4 PDF makers, 85 PDFs (`gt/`)
 
-The opening paragraph of Wikipedia's "India" article in 17 languages, turned into PDFs by Chrome, Typst, PyMuPDF and Microsoft Word (85 files), then read back by five parser setups and compared with the original text (share of 20 random 12-character snippets still findable). Headline: for Latin, Cyrillic and CJK scripts every parser is fine; for Thai, Arabic and Indic scripts pypdf and pdfplumber lose most of the text while PyMuPDF keeps 0.75–1.00; and on Word- and MuPDF-made files in the nine Indian languages every parser returns nearly the same wrong text (letter agreement between parsers 0.87–1.00), because the file's own character map is wrong. Details, numbers and caveats in [`gt/README.md`](gt/README.md).
+The opening paragraph of Wikipedia's "India" article in 17 languages, turned into PDFs by Chrome, Typst, PyMuPDF and Microsoft Word (85 files), then read back by five parser setups and compared with the original text (share of 20 random 12-character snippets still findable, spaces ignored). Headline: for Latin, Cyrillic and CJK scripts every parser is fine; for Thai, Arabic and Indic scripts pypdf and pdfplumber lose most of the text while PyMuPDF keeps 0.75–1.00; and on Word-made files in the nine Indian languages every parser returns nearly the same wrong text (similarity between parsers 0.97–1.00), because the file's own character map is wrong; on MuPDF-made files they are wrong in different ways. Details, numbers and caveats in [`gt/README.md`](gt/README.md).
 
 ## Caveats
 

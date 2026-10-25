@@ -1,6 +1,6 @@
 """Step 1: run the app's six parser setups on every generated PDF; save raw texts."""
 import sys, json, time, traceback
-sys.path.insert(0, r"d:/MY/linkedin-posts/experiments/ep01-parsing/app")
+sys.path.insert(0, str(__import__("pathlib").Path(__file__).resolve().parents[2] / "app"))   # ep01-parsing/app
 sys.path.insert(0, str(__import__("pathlib").Path(__file__).parent))
 from gt_common import *
 import rag_core as core

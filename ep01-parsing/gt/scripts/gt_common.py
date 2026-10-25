@@ -1,6 +1,6 @@
 """Shared settings for the ground-truth parser test."""
 from pathlib import Path
-ROOT = Path(__file__).resolve().parent.parent / "gt"
+ROOT = Path(__file__).resolve().parent.parent   # the gt/ folder
 TEXT, PDF = ROOT / "text", ROOT / "pdf"
 FONTS = {  # one Windows system font per script
     "en": "Calibri", "ru": "Arial", "ar": "Arial", "ur": "Arial", "th": "Leelawadee UI",

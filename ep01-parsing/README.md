@@ -28,9 +28,9 @@ Two papers: Lewis et al. 2020 ([arXiv 2005.11401](https://arxiv.org/abs/2005.114
 | pdfplumber (`x_tolerance=1.5`) | 10,046 | 0 | 46 | interleaved |
 | Docling | 10,061 | 0 | 0 | correct |
 
-- **One setting matters as much as the tool.** pdfplumber's default spacing lost the spaces on page 1 of Lewis (81 words); `x_tolerance=1.5` gave 401. On other PDFs the default was fine. PyMuPDF keeps ligatures by default (its documented behaviour); clearing one flag removes them.
+- **One setting can change the result as much as switching tools.** pdfplumber's default spacing lost the spaces on page 1 of Lewis (81 words); `x_tolerance=1.5` gave 401. In the stress test below, the default also lost words on 6 other PDFs. PyMuPDF keeps ligatures by default (its documented behaviour); clearing one flag removes them.
 - **Reading order is a guess.** On Barnett page 2, pdfplumber reads straight across both columns: "case studies involving the implementation of a RAG system. shown in Figure 1 as two separate processes…". pypdf and PyMuPDF read the left column first.
-- **The ligature-only test** (`ligature_ablation.py`): pypdf's text with only "ﬁ"→"fi" and similar replaced, so every chunk keeps the same boundaries. For three questions, one answer chunk moved up (rank 2 → 1) and one moved down (3 → 5). Clean text is still right (keyword search and readers need it), but it doesn't automatically improve dense retrieval. Measure it.
+- **The ligature-only test** (`ligature_ablation.py`): pypdf's text with only "ﬁ"→"fi" and similar replaced, so every chunk keeps the same boundaries. For three questions, one answer chunk moved up (rank 2 → 1) and one moved down (3 → 5; that question's best chunk stayed at rank 2). Clean text is still right (keyword search and readers need it), but it doesn't automatically improve dense retrieval. Measure it.
 
 ## Stress test of the app (31 files)
 
@@ -46,9 +46,9 @@ Found along the way:
 | Gazette of India notice | every parser read अधिसूचना as अजधसूचना: the PDF's own font data is wrong, so comparing parsers can't reveal it |
 | Rotated pages | pdfplumber and PyMuPDF4LLM lost text |
 
-## Ground-truth test: 17 languages × 5 PDF makers (`gt/`)
+## Ground-truth test: 17 languages, 4 PDF makers, 85 PDFs (`gt/`)
 
-The opening paragraph of Wikipedia's "India" article in 17 languages, turned into PDFs by Chrome, Typst, PyMuPDF and Microsoft Word (85 files), then read back by five parser setups and compared with the original text (share of 20 random 12-character snippets still findable). Headline: for Latin, Cyrillic and CJK scripts every parser is fine; for Thai, Arabic and Indic scripts pypdf and pdfplumber lose most of the text while PyMuPDF keeps 0.75–1.00; and on Word- and MuPDF-made Indic and Arabic files every parser returns the same wrong text, because the file's own character map is wrong. Details, numbers and caveats in [`gt/README.md`](gt/README.md).
+The opening paragraph of Wikipedia's "India" article in 17 languages, turned into PDFs by Chrome, Typst, PyMuPDF and Microsoft Word (85 files), then read back by five parser setups and compared with the original text (share of 20 random 12-character snippets still findable). Headline: for Latin, Cyrillic and CJK scripts every parser is fine; for Thai, Arabic and Indic scripts pypdf and pdfplumber lose most of the text while PyMuPDF keeps 0.75–1.00; and on Word- and MuPDF-made files in the nine Indian languages every parser returns nearly the same wrong text (letter agreement between parsers 0.87–1.00), because the file's own character map is wrong. Details, numbers and caveats in [`gt/README.md`](gt/README.md).
 
 ## Caveats
 

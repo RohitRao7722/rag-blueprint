@@ -4,7 +4,7 @@ sys.path.insert(0, str(__import__("pathlib").Path(__file__).parent))
 from gt_common import *
 PDF.mkdir(parents=True, exist_ok=True)
 def esc(s):  # escape Typst markup characters
-    for c in "\#*_`$<>@[]~/=-+":
+    for c in r"\#*_`$<>@[]~/=-+":
         s = s.replace(c, "\\" + c)
     return s
 for code in langs():

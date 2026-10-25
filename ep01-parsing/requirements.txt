@@ -1,0 +1,9 @@
+# The parser experiment (compare_parsers.py, ligature_ablation.py). Versions as tested.
+pypdf==6.20.1
+fonttools==4.66.1
+pymupdf==1.28.2
+pdfplumber==0.11.10
+fastembed==0.9.0
+numpy==2.5.4
+# Docling is large (it installs PyTorch). Skip it with: python compare_parsers.py --no-docling
+docling==2.140.0

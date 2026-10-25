@@ -1,0 +1,20 @@
+{
+  "The RAG paper (Lewis et al. 2020)": {
+    "metrics": {
+      "pages": 19,
+      "words": 10061,
+      "line-break hyphens": 0,
+      "unmapped glyphs (cid:NN)": 0,
+      "look-alike characters": 0
+    }
+  },
+  "A two-column paper (Barnett et al. 2024)": {
+    "metrics": {
+      "pages": 6,
+      "words": 4827,
+      "line-break hyphens": 5,
+      "unmapped glyphs (cid:NN)": 0,
+      "look-alike characters": 0
+    }
+  }
+}

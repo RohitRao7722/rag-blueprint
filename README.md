@@ -4,10 +4,12 @@ Code behind the **RAG Blueprint** series on LinkedIn: one carousel a week, one s
 
 No framework. Each episode is plain Python so every step stays visible.
 
+**Try it in the browser:** [huggingface.co/spaces/Rohitrao7722/rag-blueprint](https://huggingface.co/spaces/Rohitrao7722/rag-blueprint). Compare PDF parsers on your own document and watch retrieval rank its chunks.
+
 | # | Episode | Folder |
 |---|---|---|
 | 0 | The RAG map: one question traced through a basic pipeline | [`ep00-rag-map/`](ep00-rag-map/) |
-| 1 | Parsing | coming |
+| 1 | Parsing: six parser setups, same documents, and a stress test across scripts and broken files | [`ep01-parsing/`](ep01-parsing/) |
 | 2 | Chunking | coming |
 | 3 | Embeddings | coming |
 | 4 | Vector indexes | coming |
